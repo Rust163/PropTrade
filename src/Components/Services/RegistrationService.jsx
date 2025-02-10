@@ -21,7 +21,7 @@ const RegistrationService = () => {
 
     const[message, setMessage] = useState(null);
 
-    const handleInput = (event) => {
+    /*const handleInput = (event) => {
         const {name, value, files} = event.target;
         if(name === 'ProfilePicturePath'){
             setUser(prevValues => ({
@@ -34,29 +34,39 @@ const RegistrationService = () => {
                 [name]: value,
             }));
         }
-    }
+    }*/
 
-    const handleSubmit = async(data) => {
+    const handleSubmit = async (data) => {
+        /*console.log("Отправка данных на сервер:", data);*/
         try{
-            const response = await fetch('https://172.20.10.14/api/register',{
+            const response = await fetch('https://localhost:7098/api/User/register',{
                 method: 'POST',
                 headers:{
                     'Content-Type':'application/json'
                 },
-                body:JSON.stringify({data})
+                body:JSON.stringify(data)
             });
+            console.log("Ответ сервера получен:", response);
+
+        if (!response.ok) {
+            throw new Error(`Ошибка сервера: ${response.status}`);
+        }
             const result = await response.json();
+            console.log("Ответ сервера:", result);
             setMessage(result.message);
             alert('Вы успешно зарегестрировались!');
         } catch(errorReg) {
             console.error(errorReg);
-            setMessage('Что то пошло не так, произошла ошибка!');
+            setMessage('Что то пошло не так, произошла о шибка!');
         }
     }
+    console.log("Передача onSubmit в Registration:", handleSubmit);
+    console.log("Компонент RegistrationService отрендерился!");
+    console.log("handleSubmit в RegistrationService:", handleSubmit);
     return(
         <>
             <h1>Форма регистрации</h1>
-            <Registration onSubmit={handleSubmit}/>
+            <Registration onSubmit={handleSubmit || (() => console.log("Функция onSubmit не передана"))} />
             {message && <div>{message}</div>}
         </>
     )

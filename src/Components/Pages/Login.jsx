@@ -4,6 +4,7 @@ function Login(){
   const navigateReg = useNavigate();
     return(
         <>
+          <div className="container col-sm-4 pt-5">
             <div className="text-center">
                 <form className="form-signin">
                   <img className="mb-4" src="/img/brand/bootstrap-solid.svg" alt="логотип bootstrap" width="72" height="72"/>
@@ -24,6 +25,7 @@ function Login(){
                   <p className="mt-5 mb-3 text-muted">&copy; 2022-2025</p>
                 </form>
             </div>
+          </div>
         </>
     );
 }

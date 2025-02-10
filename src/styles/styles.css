@@ -1,0 +1,15 @@
+.nav-item{
+    display: flex;
+    margin-right: 10px;
+    text-decoration: crimson;
+} 
+.image-news{
+    background-image: url(../img/Screenshot_1.jpg);
+    block-size: cover;
+}
+
+.border-col{
+    padding: 10px;
+    background-color: black;
+    border-right: 2px;
+}
