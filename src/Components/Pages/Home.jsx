@@ -1,10 +1,9 @@
 import React from "react";
-
+import "../../styles/styles.css"
 function Home() {
     return (
       <>
-        
-<main className="pt-5">
+<main className="                                                                                                                                                                                                                                                                                                                                                                                                                                      ">
 
   <div id="myCarousel" className="carousel slide" data-ride="carousel">
     <ol className="carousel-indicators">
@@ -13,11 +12,11 @@ function Home() {
       <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div className="carousel-inner">
-      <div className="carousel-item active">
+      <div className="carousel-item active ">
         <svg className="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
 
-        <div className="container">
-          <div className="carousel-caption text-left">
+        <div className="container ">
+          <div className="carousel-caption text-left home-img-main">
             <h1>Пример заголовка.</h1>
             <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
             <p><a className="btn btn-lg btn-primary" href="#" role="button">Зарегистрироваться</a></p>

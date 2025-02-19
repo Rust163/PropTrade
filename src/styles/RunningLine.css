@@ -1,0 +1,60 @@
+.running-line-box {
+    display: flex;
+    align-items: center;
+    background-color: rgb(35, 35, 35);
+}
+
+.btn-box {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background-color: rgb(35, 35, 35);
+    margin-top: 5px;
+    z-index: 1;
+}
+
+.btnB {
+    font-family: var(--bs-font-sans-serif);
+    font: 500px;
+    font-style: normal;
+    margin-left: 5px;
+    background-color: rgb(105, 105, 105);
+    color: #e4e4e5;
+    align-items: center;
+    width: 110px;
+    height: 32px;
+    border: 1px;
+    border-radius: 4px;
+}
+.btnB:hover{
+    background-color: rgb(238, 238, 238);
+    color: black;
+}
+
+.motion-items {
+    align-items: center;
+    gap: 25px;
+    display: flex;
+   
+}
+
+.item-box {
+}
+.name-color {
+    font-size: small;
+    text-align: left;
+    color: rgb(160, 160, 160);
+}
+
+.price-color {
+    color: rgb(102, 102, 102);
+}
+
+
+.change-color {
+    color: rgb(0, 199, 66);
+}
+
+.change-color2 {
+    color: rgb(255, 0, 0);
+}

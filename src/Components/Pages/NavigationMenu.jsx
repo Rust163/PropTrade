@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import '../../styles/NavigationMenu.css';
 
 function NavigationMenu(){
     const navigate = useNavigate();
     return(
     <>
+    
         <header>
   <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div className="container-fluid">
@@ -35,14 +37,18 @@ function NavigationMenu(){
               <li className="nav-item">
                 <a className="nav-link" onClick={() => navigate('/Training')}>Обучение</a>
               </li>
-              <li className="nav-item" hidden={true}>
-                <a className="nav-link" >Личный кабинет</a>
-              </li>
+              
               <li className="nav-item">
                 <a className="nav-link" onClick={() => navigate('/Login')}>Войти</a>
               </li>
+              <li className="nav-item" hidden={false}>
+                <a className="nav-link" >Личный кабинет</a>
+              </li>
               <li className="nav-item">
                 <a className="nav-link" onClick={() => navigate('/Tabs')}>Tabs</a>
+              </li>
+              <li className="nav-item-login" hidden={false}>
+                <a className="nav-link" >Личный кабинет</a>
               </li>
             </ul>
       </div>

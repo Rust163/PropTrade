@@ -5,6 +5,8 @@ const Tabs = () => {
 
   return (
     <div className="pt-5"> 
+        
+   
       {/* Кнопки вкладок */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
         <button onClick={() => setActiveTab("tab1")}>Вкладка 1</button>

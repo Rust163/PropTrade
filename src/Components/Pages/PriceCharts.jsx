@@ -4,7 +4,7 @@ function PriceCharts(){
     const [activeTab, setActiveTab] = useState("Акции");
     return(
 <>       
-<nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow pt-5">
+<nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
   <a className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Название инструмента</a>
   <button className="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
@@ -110,7 +110,7 @@ function PriceCharts(){
         </div>
       </div>
 
-      <canvas className="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      <canvas className="my-4 w-100 charts-img" id="myChart" width="900" height="380"></canvas>
 
       <h2>{activeTab} <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}><button type="button" className="btn btn-sm btn-outline-secondary" hidden>Добавить инструмент</button>
         <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Акции")}>Акции</button>

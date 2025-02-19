@@ -57,7 +57,7 @@ const RegistrationService = () => {
             alert('Вы успешно зарегестрировались!');
         } catch(errorReg) {
             console.error(errorReg);
-            setMessage('Что то пошло не так, произошла о шибка!');
+            setMessage('Что то пошло не так, произошла ошибка!');
         }
     }
     console.log("Передача onSubmit в Registration:", handleSubmit);

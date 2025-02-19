@@ -3,7 +3,7 @@ import "../../styles/styles.css"
 function News() {
     return(
     <>
-        <div className="container pt-5">
+        <div className="container">
   <header className="blog-header py-3">
     <div className="row flex-nowrap justify-content-between align-items-center">
       <div className="col-4 pt-1">
@@ -35,11 +35,11 @@ function News() {
 </div>
 
 <main className="container ">
-  <div className="p-4 p-md-5 mb-4 text-white rounded bg-dark image-news">
+  <div className="p-4 p-md-5 mb-4 text-dark rounded bg-dark image-news">
     <div className="col-md-6 px-0">
-      <h1 className="display-4 fst-italic">На этой странице вы сможете узнать последние новости из мира финансов!</h1>
-      <p className="lead my-3">Так же для вашего удобства мы разделили новостную информацию по отрослям. Выше увидите подменю.</p>
-      <p className="lead mb-0"><a href="#" className="text-white fw-bold">Continue reading...</a></p>
+      <h1 className="display-4 fst-italic fw-bold">На этой странице вы сможете узнать последние новости из мира финансов!</h1>
+      <p className="lead my-3 fw-bold">Так же для вашего удобства мы разделили новостную информацию по отрослям. Выше увидите подменю.</p>
+      <p className="lead mb-0"><a href="#" className="text-dark fw-bold">Continue reading...</a></p>
     </div>
   </div>
 
@@ -53,7 +53,7 @@ function News() {
           <p className="card-text mb-auto">Тут будут появляться последние мировые события, политического, геополитического и финансового мира.</p>
           <a href="#" className="stretched-link">Читать далее...</a>
         </div>
-        <div className="col-auto d-none d-lg-block">
+        <div className="col-auto d-none d-lg-block" >
           <svg className="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
 
         </div>

@@ -1,16 +1,19 @@
 import React from "react";
-
+import "../../styles/styles.css"
+import imageComunity from '../../img/4.png';
+import imageProg from '../../img/6.png';
+import imageRisk from '../../img/5.png';
 function Training(){
     return(
         <>
         <main>
             <section className="py-5 text-center container pt-5">
-    <div className="row py-lg-5">
+    <div className="row py-lg-5 home-img-main">
       <div className="col-lg-6 col-md-8 mx-auto">
-        <h1 className="font-weight-light">Обучение трейдингу</h1>
-        <p className="lead text-muted">Мы обучаем трейдеров с нуля, не важно есть у вас опыт или вы первый раз видите графики и котировки. Вас будут учить только действующие трейдеры! Оставляйте заявку и наш менеджер свяжется с Вами.</p>
+        <h1 className="font-weight-light text-light">Обучение трейдингу</h1>
+        <p className="lead text-light">Мы обучаем трейдеров с нуля, не важно есть у вас опыт или вы первый раз видите графики и котировки. Вас будут учить только действующие трейдеры! Оставляйте заявку и наш менеджер свяжется с Вами.</p>
         <p>
-          <a href="#" className="btn btn-primary my-2">Оставить заявку</a>
+          <a href="#" className="btn btn-sm btn-outline-secondary text-light">Оставить заявку</a>
         </p>
       </div>
     </div>
@@ -24,9 +27,17 @@ function Training(){
       <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div className="col">
           <div className="card shadow-sm">
-            <svg className="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Thumbnail" preserveaspectratio="xMidYMid slice" role="img" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+          <img 
+            src={imageComunity} 
+            className="card-img-top" 
+            alt="Большое комьюнити трейдеров" 
+            width="100%" 
+            height="225"
+            style={{ objectFit: "cover" }}
+            />
 
-            <div className="card-body">
+            <div className="card-body ">
+                
             <h3 className="text-center">Большое комьюнити трейдеров</h3>
               <p className="card-text">Это более широкая карточка с вспомогательным текстом ниже как естественный ввод к дополнительному контенту. Этот контент немного длиннее.</p>
               <div className="d-flex justify-content-between align-items-center">
@@ -41,7 +52,14 @@ function Training(){
         </div>
         <div className="col">
           <div className="card shadow-sm">
-            <svg className="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Thumbnail" preserveaspectratio="xMidYMid slice" role="img" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+          <img 
+            src={imageProg} 
+            className="card-img-top" 
+            alt="Передовое программное обеспечение" 
+            width="100%" 
+            height="225"
+            style={{ objectFit: "cover" }}
+            />
 
             <div className="card-body">
             <h3 className="text-center">Передовое программное обеспечение</h3>
@@ -58,8 +76,14 @@ function Training(){
         </div>
         <div className="col">
           <div className="card shadow-sm">
-            <svg className="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" aria-label="Placeholder: Thumbnail" preserveaspectratio="xMidYMid slice" role="img" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
+          <img 
+            src={imageRisk} 
+            className="card-img-top" 
+            alt="Риск-менеджмент" 
+            width="100%" 
+            height="225"
+            style={{ objectFit: "cover" }}
+            />
             <div className="card-body">
             <h3 className="text-center">Риск-менеджмент                     </h3>
               <p className="card-text">Это более широкая карточка с вспомогательным текстом ниже как естественный ввод к дополнительному контенту. Этот контент немного длиннее.</p>

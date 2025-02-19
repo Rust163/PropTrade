@@ -1,6 +1,7 @@
 import React from "react";
 import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavigationMenu from "./Components/Pages/NavigationMenu";
+import RunningLine from "./Components/Pages/RunningLine";
 import Home from "./Components/Pages/Home";
 import News from "./Components/Pages/News";
 import PriceCharts from "./Components/Pages/PriceCharts";
@@ -16,6 +17,7 @@ function App() {
   <>
     <Router>
       <NavigationMenu />
+      <RunningLine />
       <Routes>
         <Route path="/Home" element={<Home />}/>
         <Route path="/News" element={<News />}/>

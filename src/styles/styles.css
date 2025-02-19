@@ -4,8 +4,23 @@
     text-decoration: crimson;
 } 
 .image-news{
-    background-image: url(../img/Screenshot_1.jpg);
-    block-size: cover;
+    background-image: url("../img/oboi-v-vide-gazeti-dizain-pinterest-38.jpg");
+    width: 100%;
+    height: 100%;
+    background-size: cover; /* Заполняет div полностью */
+    background-position: center;
+
+}
+
+.home-img-main{
+    background-image: url(../img/header_bg.png);
+    object-fit: cover;
+    background-size: cover;
+}
+
+.charts-img{
+    background-image: url(../img/6e60ab5519.png);
+    object-fit: cover;
 }
 
 .border-col{
