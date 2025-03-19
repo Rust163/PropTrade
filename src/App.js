@@ -9,7 +9,9 @@ import Training from "./Components/Pages/Training";
 import Login from "./Components/Pages/Login";
 import Registration from "./Components/Pages/Registration";
 import RegistrationService from "./Components/Services/RegistrationService";
-import Tabs from "./Components/Pages/TestTabs";
+import TestTabs from "./Components/Pages/TestTabs";
+import AdminPanel from "./Components/Pages/AdminPanel";
+import PersonalAccount from "./Components/Pages/PersonalAccount";
 import './styles/bootstrap.css';
 
 function App() {
@@ -25,7 +27,9 @@ function App() {
         <Route path="/Training" element={<Training />}/>
         <Route path="/Login" element={<Login />}/>
         <Route path="/Registration" element={<RegistrationService/>} />
-        <Route path="/Tabs" element={<Tabs />}/>
+        <Route path="/TestTabs" element={<TestTabs />}/>
+        <Route path="/AdminPanel" element={<AdminPanel />}/>
+        <Route path="/PersonalAccount" element={<PersonalAccount />}/>
       </Routes>
     </Router>
   </>

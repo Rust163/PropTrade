@@ -1,6 +1,8 @@
-import React from "react";
+import {React, useState, useEffect} from "react";
 import "../../styles/styles.css"
+/*https://iss.moex.com/iss/sitenews новости биржи */
 function News() {
+  
     return(
     <>
         <div className="container">

@@ -95,7 +95,7 @@ const Registration = ({onSubmit}) => {
             <input type="text" className="form-control" id="" value={PassportSeries} placeholder="Серия" onChange={(e) => setPassportSeries(e.target.value)}/>
             <input type="text" className="form-control" id="" value={PassportNumber} placeholder="Номер" onChange={(e) => setPassportNumber(e.target.value)}/>
             <input type="text" className="form-control" id="" value={PassportIssued} placeholder="Когда и кем выдан" onChange={(e) => setPassportIssued(e.target.value)}/>
-            <input type="file" className="form-control" id="" placeholder="Скан или фотография паспорта" onChange={(e) => setDocumentPicturePath(e.target.files[0])}/>
+            
           </div>
 
           <div className="col-md-7">

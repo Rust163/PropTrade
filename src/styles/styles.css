@@ -12,6 +12,7 @@
 
 }
 
+
 .home-img-main{
     background-image: url(../img/header_bg.png);
     object-fit: cover;
@@ -23,6 +24,9 @@
     object-fit: cover;
 }
 
+.ff-text{
+    font-family: Actay,sans-serif;
+}
 .border-col{
     padding: 10px;
     background-color: black;

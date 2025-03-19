@@ -39,11 +39,9 @@ const RegistrationService = () => {
     const handleSubmit = async (data) => {
         /*console.log("Отправка данных на сервер:", data);*/
         try{
-            const response = await fetch('https://localhost:7098/api/User/register',{
+            const response = await fetch('https://localhost:7001/api/User/registration',{
                 method: 'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
+                headers:{'Content-Type':'application/json'},
                 body:JSON.stringify(data)
             });
             console.log("Ответ сервера получен:", response);

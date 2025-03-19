@@ -9,8 +9,8 @@ function NavigationMenu(){
     
         <header>
   <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div className="container-fluid">
-      <a className="navbar-brand" href="#">Intraday Trading EcoSystems</a>
+    <div className="container-fluid hight">
+      <a className="navbar-brand colorful-text logo_ites" href="#">Intraday Trading EcoSystems<br/><p className="Slogan">ITES: Технологии для вашего успеха</p></a>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -23,7 +23,7 @@ function NavigationMenu(){
                 <a className="nav-link" onClick={() => navigate('/News')}>Новости</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/PriceCharts')}>Графики/Котировки</a>
+                <a className="nav-link point-nav" onClick={() => navigate('/PriceCharts')}>Графики/Котировки</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" >Программное обеспечение</a>
@@ -42,13 +42,13 @@ function NavigationMenu(){
                 <a className="nav-link" onClick={() => navigate('/Login')}>Войти</a>
               </li>
               <li className="nav-item" hidden={false}>
-                <a className="nav-link" >Личный кабинет</a>
+                <a className="nav-link" onClick={() => navigate('/PersonalAccount')}>Личный кабинет</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" onClick={() => navigate('/Tabs')}>Tabs</a>
               </li>
-              <li className="nav-item-login" hidden={false}>
-                <a className="nav-link" >Личный кабинет</a>
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => navigate('/AdminPanel')}>Админка</a>
               </li>
             </ul>
       </div>

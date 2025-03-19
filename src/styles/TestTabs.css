@@ -1,0 +1,47 @@
+/* Стили для кнопки открытия */
+.sidebar-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* Основной контейнер сайдбара */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px; /* Скрыто изначально */
+  width: 250px;
+  height: 100%;
+  background: #503636;
+  color: rgb(255, 0, 0);
+  padding-top: 50px;
+  transition: left 0.3s ease-in-out;
+}
+
+/* Если сайдбар открыт */
+.sidebar.open {
+  left: 0;
+}
+
+/* Стили для пунктов меню */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar li:hover {
+  background: #444;
+}

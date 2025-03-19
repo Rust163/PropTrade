@@ -1,25 +1,27 @@
 import React, { useState } from "react";
+import { FaBars, FaTimes, FaCog, FaChartLine, FaUsers } from "react-icons/fa";
+import "../../styles/TestTabs.css"; // Подключаем стили
 
-const Tabs = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+function TestTabs() {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="pt-5"> 
-        
-   
-      {/* Кнопки вкладок */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-        <button onClick={() => setActiveTab("tab1")}>Вкладка 1</button>
-        <button onClick={() => setActiveTab("tab2")}>Вкладка 2</button>
-        <button onClick={() => setActiveTab("tab3")}>Вкладка 3</button>
+    <>
+      {/* Кнопка для открытия сайдбара */}
+      <button className="sidebar-toggle" onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
+      </button>
+
+      {/* Сайдбар */}
+      <div className={`sidebar ${isOpen ? "open" : ""}`}>
+        <ul>
+          <li><FaChartLine /> Графики</li>
+          <li><FaUsers /> Пользователи</li>
+          <li><FaCog /> Настройки</li>
+        </ul>
       </div>
-
-      {/* Контент вкладок */}
-      {activeTab === "tab1" && <div>Контент первой вкладки</div>}
-      {activeTab === "tab2" && <div>Контент второй вкладки</div>}
-      {activeTab === "tab3" && <div>Контент третьей вкладки</div>}
-    </div>
+    </>
   );
-};
+}
 
-export default Tabs;
+export default TestTabs;

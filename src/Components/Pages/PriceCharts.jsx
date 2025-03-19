@@ -1,5 +1,7 @@
 import React, {useState} from "react";
-import '../../styles/styles.css';
+import '../../styles/PriceCharts.css';
+
+/*https://iss.moex.com/iss/statistics/engines/futures/markets/forts/series список фьючерсов */
 function PriceCharts(){
     const [activeTab, setActiveTab] = useState("Акции");
     return(
@@ -20,10 +22,10 @@ function PriceCharts(){
 <div className="container-fluid">
   <div className="row">
     <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div className="position-sticky pt-3">
+      <div className="pt-3">
         <ul className="nav flex-column">
           <li className="nav-item">
-            <a className="nav-link active link-secondary" aria-current="page" href="#">
+            <a className="nav-link active link-secondary ff-text" aria-current="page" href="#">
               <span data-feather="home"></span>
               Фондовый рынок
             </a>
@@ -60,38 +62,7 @@ function PriceCharts(){
           </li>
         </ul>
 
-        <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
-          <a className="link-secondary" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
-          </a>
-        </h6>
-        <ul className="nav flex-column mb-2">
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Current month
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Last quarter
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Social engagement
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Year-end sale
-            </a>
-          </li>
-        </ul>
+        
       </div>
     </nav>
 
