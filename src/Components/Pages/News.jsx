@@ -1,8 +1,23 @@
 import {React, useState, useEffect} from "react";
 import "../../styles/styles.css"
+import axios from "axios";
 /*https://iss.moex.com/iss/sitenews новости биржи */
 function News() {
-  
+  const[news, setNews] = useState([]);
+  const[loading, setLoading] = useState(true);
+  const[error, setError] = useState(null);
+
+  //Получаем новостные данные
+  const fatchNewsData = async () => {
+    try{
+      const responseNews = await axios.get(
+        "https://iss.moex.com/iss/sitenews.json"
+      );
+      console.log("Ответ api:" ,responseNews.data);
+    } catch{
+      
+    }
+  }
     return(
     <>
         <div className="container">

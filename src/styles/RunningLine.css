@@ -1,14 +1,14 @@
 .running-line-box {
     display: flex;
     align-items: center;
-    background-color: rgb(77, 77, 77);
+    background-color: rgb(37, 37, 37);
 }
 
 .btn-box {
     display: flex;
     align-items: center;
     height: 40px;
-    background-color: rgb(35, 35, 35);
+    background-color: rgb(37, 37, 37);
     margin-top: 5px;
     z-index: 1;
 }
@@ -18,7 +18,7 @@
     font: 500px;
     font-style: normal;
     margin-left: 5px;
-    background-color: rgb(105, 105, 105);
+    background-color: rgb(109, 109, 109);
     color: #e4e4e5;
     align-items: center;
     width: 110px;
@@ -41,11 +41,11 @@
 .name-color {
     font-size: small;
     text-align: left;
-    color: rgb(160, 160, 160);
+    color: rgb(119, 185, 255);
 }
 
 .price-color {
-    color: rgb(102, 102, 102);
+    color: rgb(179, 179, 179);
     margin-right: 10px;
 }
 
@@ -56,4 +56,12 @@
 
 .change-color2 {
     color: rgb(255, 0, 0);
+}
+
+.change-color.positive {
+    color: #4caf50; 
+}
+  
+.change-color.negative {
+    color: #f44336; 
 }

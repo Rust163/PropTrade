@@ -4,31 +4,25 @@ import "../../styles/RunningLine.css";
 import { motion } from "framer-motion";
 
 function RunningLine() {
-  const [activBatton, setActivButton] = useState("Взлеты дня");
-  const [positive, setPositive] = useState([]); // данные для взлеты дня
-  const [negative, setNegative] = useState([]); // данные для падения дня
-  const [worldIndex, setWorldIndex] = useState([]); // данные для индексов
-  const [loading, setLoading] = useState(true); // состояние загрузки данных
-  const [error, setError] = useState(null); // состояние ошибки
+  const [activeButton, setActiveButton] = useState("Взлеты дня");
+  const [positive, setPositive] = useState([]);
+  const [negative, setNegative] = useState([]);
+  const [indices, setIndices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Получаем данные о взлетах дня и падениях
   const fetchStockData = async () => {
     try {
       const response = await axios.get(
         "https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json?sort_order=desc&sort_column=LASTTOPREVPRICE"
       );
-      console.log("Ответ API (marketdata):", response.data.marketdata);
 
-      // Проверяем, есть ли данные в ответе
-      if (!response.data || !response.data.marketdata || !response.data.marketdata.columns || !response.data.marketdata.data) {
+      if (!response.data?.marketdata?.data) {
         throw new Error("Некорректный формат данных от API (marketdata)");
       }
 
-      const columns = response.data.marketdata.columns;
-      const data = response.data.marketdata.data;
-
-      // Преобразуем данные в массив объектов
-      const formatData = data.map((row) => {
+      const { columns, data } = response.data.marketdata;
+      const formatData = data.map(row => {
         const security = {};
         columns.forEach((column, index) => {
           security[column] = row[index];
@@ -36,14 +30,11 @@ function RunningLine() {
         return security;
       });
 
-      console.log("Форматированные данные (marketdata):", formatData);
-
-      // Фильтруем данные для взлетов и падений
       const positiveData = formatData
-        .filter((item) => item.LASTTOPREVPRICE > 0)
+        .filter(item => item.LASTTOPREVPRICE > 0)
         .slice(0, 15);
       const negativeData = formatData
-        .filter((item) => item.LASTTOPREVPRICE < 0)
+        .filter(item => item.LASTTOPREVPRICE < 0)
         .slice(0, 15);
 
       setPositive(positiveData);
@@ -54,42 +45,53 @@ function RunningLine() {
     }
   };
 
-  // Получаем данные по индексам
   const fetchIndexData = async () => {
     try {
+      // Используем альтернативный, более надежный API эндпоинт
       const response = await axios.get(
-        "https://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics.json"
+        "https://iss.moex.com/iss/engines/stock/markets/index/securities.json?iss.meta=off&securities.columns=SECID,SHORTNAME,PREVADMITTEDQUOTE,LASTVALUE,CHANGEPRCT"
       );
-      console.log("Ответ API (indices):", response.data.indices);
-
-      // Проверяем, есть ли данные в ответе
-      if (!response.data || !response.data.indices || !response.data.indices.columns || !response.data.indices.data) {
-        throw new Error("Некорректный формат данных от API (indices)");
+  
+      console.log("Raw API response:", response.data);
+  
+      // Проверяем наличие данных в нестандартной структуре
+      const securitiesData = response.data.securities?.data;
+      if (!securitiesData || !Array.isArray(securitiesData)) {
+        throw new Error("Не удалось получить данные индексов");
       }
-
-      const indices = response.data.indices;
-
-      const { columns, data } = indices;
-
-      // Преобразуем данные в массив объектов
-      const formatData = data.map((row) => {
-        const index1 = {};
-        columns.forEach((column, index) => {
-          index1[column] = row[index];
-        });
-        return index1;
-      });
-
-      console.log("Форматированные данные (indices):", formatData);
-
-      setWorldIndex(formatData.slice(0, 20)); // Сохраняем первые 5 индексов
+  
+      // Список основных индексов для фильтрации
+      const MAIN_INDICES = ['IMOEX', 'RTSI', 'MOEXBMI', 'MOEX10', 'MOEXFN', 'RGBITR'];
+  
+      // Преобразуем данные
+      const indices = securitiesData
+        .filter(row => MAIN_INDICES.includes(row[0])) // Фильтруем по SECID
+        .map(row => ({
+          SECID: row[0],
+          name: row[1],
+          prevValue: row[2],
+          currentValue: row[3],
+          changePercent: row[4]
+        }))
+        .sort((a, b) => MAIN_INDICES.indexOf(a.SECID) - MAIN_INDICES.indexOf(b.SECID));
+        
+  
+      console.log("Processed indices:", indices);
+      
+      if (indices.length === 0) {
+        throw new Error("Не найдены данные по основным индексам");
+      }
+  
+      setIndices(indices);
     } catch (error) {
-      console.error("Ошибка при загрузке данных (indices):", error);
-      setError(error);
+      console.error("Ошибка при загрузке индексов:", error);
+      setError(new Error("Не удалось загрузить данные индексов. Попробуйте позже."));
+      
+      // Запасной вариант - тестовые данные
+      
     }
   };
 
-  // Загружаем данные
   useEffect(() => {
     const fetchData = async () => {
       await fetchStockData();
@@ -112,33 +114,30 @@ function RunningLine() {
     <div className="running-line-box pt-5">
       <div className="btn-box">
         <button
-          id="items"
-          className={`btnB ${activBatton === "Взлеты дня" ? "active" : ""}`}
-          onClick={() => setActivButton("Взлеты дня")}
+          className={`btnB ${activeButton === "Взлеты дня" ? "active" : ""}`}
+          onClick={() => setActiveButton("Взлеты дня")}
         >
           Взлеты дня
         </button>
         <button
-          id="items2"
-          className={`btnB ${activBatton === "Падения дня" ? "active" : ""}`}
-          onClick={() => setActivButton("Падения дня")}
+          className={`btnB ${activeButton === "Падения дня" ? "active" : ""}`}
+          onClick={() => setActiveButton("Падения дня")}
         >
           Падения дня
         </button>
         <button
-          id="items3"
-          className={`btnB ${activBatton === "Индексы" ? "active" : ""}`}
-          onClick={() => setActivButton("Индексы")}
+          className={`btnB ${activeButton === "Индексы" ? "active" : ""}`}
+          onClick={() => setActiveButton("Индексы")}
         >
           Индексы
         </button>
       </div>
 
-      {activBatton === "Взлеты дня" && (
+      {activeButton === "Взлеты дня" && (
         <motion.div
           className="motion-items"
-          initial={{ x: "50%" }}
-          animate={{ x: "-50%" }}
+          initial={{ x: "100%" }}
+          animate={{ x: "-100%" }}
           transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
         >
           {[...positive, ...positive].map((item, index) => (
@@ -147,18 +146,18 @@ function RunningLine() {
               <br />
               <span className="price-color">{item.LAST}</span>
               <span className="change-color">
-                {item.LASTTOPREVPRICE ? item.LASTTOPREVPRICE.toFixed(2) : "N/A"}%
+                {item.LASTTOPREVPRICE?.toFixed(2) ?? "N/A"}%
               </span>
             </div>
           ))}
         </motion.div>
       )}
 
-      {activBatton === "Падения дня" && (
+      {activeButton === "Падения дня" && (
         <motion.div
           className="motion-items"
-          initial={{ x: "50%" }}
-          animate={{ x: "-50%" }}
+          initial={{ x: "100%" }}
+          animate={{ x: "-100%" }}
           transition={{ repeat: Infinity, duration: 70, ease: "linear" }}
         >
           {[...negative, ...negative].map((item, index) => (
@@ -167,27 +166,27 @@ function RunningLine() {
               <br />
               <span className="price-color">{item.LAST}</span>
               <span className="change-color2">
-                {item.LASTTOPREVPRICE ? item.LASTTOPREVPRICE.toFixed(2) : "N/A"}%
-              </span>LASTTOPREVPRICE
+                {item.LASTTOPREVPRICE?.toFixed(2) ?? "N/A"}%
+              </span>
             </div>
           ))}
         </motion.div>
       )}
 
-      {activBatton === "Индексы" && (
+      {activeButton === "Индексы" && (
         <motion.div
           className="motion-items"
           initial={{ x: "100%" }}
           animate={{ x: "-100%" }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
         >
-          {worldIndex.map((item, index) => (
+          {indices.map((item, index) => (
             <div key={index} className="item-box">
               <span className="name-color">{item.SECID}</span>
               <br />
-              <span className="price-color">{item.LAST}</span>
-              <span className="change-color">
-                {item.LASTTOPREVPRICE ? item.LASTTOPREVPRICE.toFixed(2) : "N/A"}
+              <span className="price-color">{item.INDEXVAL}</span>
+              <span className={`change-color ${item.LASTVALUE >= 0 ? "positive" : "negative"}`}>
+                {item.LASTVALUE?.toFixed(2) ?? "N/A"}%
               </span>
             </div>
           ))}

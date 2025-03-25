@@ -1,8 +1,41 @@
 import React, {useState} from "react";
 import '../../styles/PriceCharts.css';
+import axios from "axios";
 
-/*https://iss.moex.com/iss/statistics/engines/futures/markets/forts/series список фьючерсов */
+/*https://iss.moex.com/iss/engines/futures/markets/forts/securities.json список фьючерсов */
+/*https://iss.moex.com/iss/engines/stock/markets/shares/securities.json список акций*/
+/*https://iss.moex.com/iss/engines/currency/markets/selt/securities.json список валютных пар */
+/*https://iss.moex.com/iss/engines/futures/markets/options/securities.json список опционов */
+
 function PriceCharts(){
+  const [stock, setStock] = useState([]);
+const [futures, setFutures] = useState([]);
+const [loading, setLoading] = useState(null);
+//const [error, setError] = useState(error);
+
+const stackData = async() => {
+  try {
+    const response = await axios.get(
+      "https://iss.moex.com/iss/engines/futures/markets/forts/securities.json"
+    )
+    if (!response.data || !response.data.marketdata || !response.data.marketdata.columns || !response.data.marketdata.data) {
+      throw new Error("Некорректный формат данных от API (marketdata)");
+    }
+
+    const columns = response.data.marketdata.columns;
+    const data = response.data.marketdata.data;
+
+    const formatStockData = data.map((row) => {
+      const security = {};
+      columns.forEach((column, index) => {
+        security[column] = row[index];
+      });
+      return security;
+    });
+  } catch (error) {
+    
+  }
+}
     const [activeTab, setActiveTab] = useState("Акции");
     return(
 <>       
