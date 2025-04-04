@@ -1,3 +1,125 @@
-.ff-text{
-    font-family: Actay,sans-serif;
+.table td, .table th {
+    border-right: 1px solid #000000;
+  }
+
+  
+
+.boardId-dropdown-meny{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #0b0b0b;
+    box-sizing: 0 2px 5px rgba(0,0,0,0.2);
+    min-width: 100px;
 }
+
+.selecter-dropdown-menu{
+    padding: "8px 12px";
+    background-color: #626262;
+    cursor: pointer;
+}
+
+.boardId-dropdown-meny :hover{
+    background-color: #a7a6a6;
+    color: #222222;
+}
+
+
+
+/* Контейнер таблицы */
+.stock-table-container {
+    width: 100%;
+    max-height: 70vh;
+    overflow: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Сама таблица */
+  .stock-table {
+    
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgb(255, 255, 255);
+  }
+  
+  /* Шапка таблицы */
+  .stock-table thead th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #7b7b7b 0%, #000000 100%);
+    color: white;
+    padding: 1px 15px;
+    font-weight: 150;
+    text-align: center;
+    border-bottom: none;
+    z-index: 10;
+  }
+  
+  /* Ячейки шапки */
+  .stock-table th:first-child {
+    border-top-left-radius: 12px;
+  }
+  .stock-table th:last-child {
+    border-top-right-radius: 12px;
+  }
+  
+  /* Строки таблицы */
+  .stock-table tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  /* Чередование цветов строк */
+  .stock-table tbody tr:nth-child(even) {
+    background-color: #e9e7e7;
+  }
+  
+  /* Эффект при наведении */
+  .stock-table tbody tr:hover {
+    background-color: #848484 !important;
+    color: white;
+    transform: translateX(4px);
+  }
+  
+  /* Ячейки данных */
+  .stock-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid #b3b3b3;
+    vertical-align: middle;
+  }
+  
+  /* Стиль для цены */
+  .price-cell {
+    font-weight: 600;
+    font-family: 'Roboto Mono', monospace;
+  }
+  
+  /* Стиль для положительных изменений */
+  .positive-change {
+    color: #02cf54;
+    background-color: rgba(0, 168, 107, 0.08);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  /* Стиль для отрицательных изменений */
+  .negative-change {
+    color: #ff3b30;
+    background-color: rgba(255, 59, 48, 0.08);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  /* Скроллбар */
+  .stock-table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .stock-table-container::-webkit-scrollbar-thumb {
+    background: #6b73ff;
+    border-radius: 4px;
+  }

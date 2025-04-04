@@ -54,7 +54,7 @@ function RunningLine() {
   
       console.log("Raw API response:", response.data);
   
-      // Проверяем наличие данных в нестандартной структуре
+      // Проверяем наличиe 
       const securitiesData = response.data.securities?.data;
       if (!securitiesData || !Array.isArray(securitiesData)) {
         throw new Error("Не удалось получить данные индексов");

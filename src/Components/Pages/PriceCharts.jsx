@@ -1,6 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import '../../styles/PriceCharts.css';
-import axios from "axios";
+import StockTable from "../Tables/StockTable";
+import FuturesTable from "../Tables/FuturesTable";
+import {useStockData} from "../../Hooks/useStockData";
+import {useFuturesData} from "../../Hooks/useFuturesData";
+
 
 /*https://iss.moex.com/iss/engines/futures/markets/forts/securities.json список фьючерсов */
 /*https://iss.moex.com/iss/engines/stock/markets/shares/securities.json список акций*/
@@ -8,35 +12,40 @@ import axios from "axios";
 /*https://iss.moex.com/iss/engines/futures/markets/options/securities.json список опционов */
 
 function PriceCharts(){
-  const [stock, setStock] = useState([]);
-const [futures, setFutures] = useState([]);
-const [loading, setLoading] = useState(null);
-//const [error, setError] = useState(error);
+  const {stock, loading, refetch} = useStockData();
+  const {futures, loadingFutures, refetchFutures} = useFuturesData()
+  const [options, setOptions] = useState([]);
+  const [currency, setCurrency] = useState([]);
+  const [error, setError] = useState(null);
+  const [hoveredHeader, setHoveredHeader] = useState(null);
+  const [selectedTradeMode, setSelectedTradeMode] = useState("Все режимы");
+  const [hoveredHeaderListLevel, setHoveredHeaderListLevel] = useState(null);
+  const [selectedListLevel, setSelectedListLevel] = useState("Все эшелоны");
+  
+  
+  const tradeModes = [
+    "Все режимы",
+    "TQBR",
+    "TQTF",
+    "SPEQ",
+    "TQIF",
+    "SMAL"
+  ];
 
-const stackData = async() => {
-  try {
-    const response = await axios.get(
-      "https://iss.moex.com/iss/engines/futures/markets/forts/securities.json"
-    )
-    if (!response.data || !response.data.marketdata || !response.data.marketdata.columns || !response.data.marketdata.data) {
-      throw new Error("Некорректный формат данных от API (marketdata)");
-    }
+  const listLevel = [
+    "Все эшелоны",
+    "1 эшелон",
+    "2 эшелон",
+    "3 эшелон"
+  ];
 
-    const columns = response.data.marketdata.columns;
-    const data = response.data.marketdata.data;
-
-    const formatStockData = data.map((row) => {
-      const security = {};
-      columns.forEach((column, index) => {
-        security[column] = row[index];
-      });
-      return security;
-    });
-  } catch (error) {
-    
-  }
-}
     const [activeTab, setActiveTab] = useState("Акции");
+    console.log("Данные акций:", stock); // Проверка данных
+    console.log("Данные фьючерсов:", futures);
+
+if (loading) return <div className="loading">Загружаем рынки ценных бумаг...</div>;
+
+
     return(
 <>       
 <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -99,7 +108,7 @@ const stackData = async() => {
       </div>
     </nav>
 
-    <main className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <main className="col-md-12 ml-sm-auto col-lg-10 px-md-4">
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 className="h2">График цены</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
@@ -116,438 +125,42 @@ const stackData = async() => {
 
       <canvas className="my-4 w-100 charts-img" id="myChart" width="900" height="380"></canvas>
 
-      <h2>{activeTab} <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}><button type="button" className="btn btn-sm btn-outline-secondary" hidden>Добавить инструмент</button>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Акции")}>Акции</button>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Фьючерсы")}>Фьючерсы</button>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Валюта")}>Валюта</button>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Криптовалюта")}>Криптовалюта</button>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Избранное")}>Избранное</button>
-      </div></h2>
+      <h2>{activeTab} 
+        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}><button type="button" className="btn btn-sm btn-outline-secondary" hidden>Добавить инструмент</button>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Акции")}>Акции</button>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Фьючерсы")}>Фьючерсы</button>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Валюта")}>Валюта</button>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Криптовалюта")}>Криптовалюта</button>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Избранное")}>Избранное</button>
+        </div>
+      </h2>
       
-      <div className="table-responsive">
-        <table className="table table-striped table-sm table-hover table-active" >
-          
-          {activeTab === "Акции" && <div>
-            <thead>
-            <tr className="table-active">
-              <th className="text-center">Тикет</th>
-              <th className="text-center">Название</th>
-              <th className="text-center">Тип инструмента</th>
-              <th className="text-center">Отрасль</th>
-              <th className="text-center">Цена</th>
-              <th className="text-center">Объем</th>
-              <th className="text-center">Волатильность</th>
-              <th className="text-center">Рыночный тренд</th>
-              <th className="text-center">Дата экспирации(Фьючерсы)</th>
-              <th className="text-center">Гарантийное обеспечение(Фьючерсы)</th>
-            </tr>
-          </thead>
-            <tbody>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">brn-9.25</td>
-              <td className="text-center">Brand</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">сырьевая</td>
-              <td className="text-center">85,63</td>
-              <td className="text-center">96млн</td>
-              <td className="text-center">43</td>
-              <td className="text-center">флет</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">8560</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-          </tbody>
-          </div>}
-          {activeTab === "Фьючерсы" && <div>
-            <thead>
-            <tr className="table-active">
-              <th className="text-center">Тикет</th>
-              <th className="text-center">Название</th>
-              <th className="text-center">Тип инструмента</th>
-              <th className="text-center">Отрасль</th>
-              <th className="text-center">Цена</th>
-              <th className="text-center">Объем</th>
-              <th className="text-center">Волатильность</th>
-              <th className="text-center">Рыночный тренд</th>
-              <th className="text-center">Дата экспирации(Фьючерсы)</th>
-              <th className="text-center">Гарантийное обеспечение(Фьючерсы)</th>
-            </tr>
-          </thead>
-            <tbody>
-            <tr>
-              <td className="text-center">AAPL</td>
-              <td className="text-center">Apple</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">it</td>
-              <td className="text-center">563.25</td>
-              <td className="text-center">125млн</td>
-              <td className="text-center">36</td>
-              <td className="text-center">флет</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">brn-9.25</td>
-              <td className="text-center">Brand</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">сырьевая</td>
-              <td className="text-center">85,63</td>
-              <td className="text-center">96млн</td>
-              <td className="text-center">43</td>
-              <td className="text-center">флет</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">8560</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-            <tr>
-              <td className="text-center">sber</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Акции</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">236,52</td>
-              <td className="text-center">56млн</td>
-              <td className="text-center">46</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">--</td>
-              <td className="text-center">--</td>
-            </tr>
-            <tr>
-              <td className="text-center">sbк-9.25</td>
-              <td className="text-center">Сбербанк</td>
-              <td className="text-center">Фьючерсы</td>
-              <td className="text-center">банковская</td>
-              <td className="text-center">2396</td>
-              <td className="text-center">14млн</td>
-              <td className="text-center">39</td>
-              <td className="text-center">рост</td>
-              <td className="text-center">15.09.2025</td>
-              <td className="text-center">4953</td>
-            </tr>
-          </tbody>
-          </div>}
-          {activeTab === "Валюта" && <div>
+      <div className="stock-table-container">
+        <table className="stock-table" >
+          {activeTab === "Акции" && 
+          <StockTable
+          stock={stock}
+          loading={loading}
+          selectedTradeMode={selectedTradeMode}
+          selectedListLevel={selectedListLevel}
+          tradeModes={tradeModes}
+          listLevel={listLevel}
+          setSelectedTradeMode={setSelectedTradeMode}
+          setSelectedListLevel={setSelectedListLevel}
+          hoveredHeader={hoveredHeader}
+          setHoveredHeader={setHoveredHeader}
+          hoveredHeaderListLevel={hoveredHeaderListLevel}
+          setHoveredHeaderListLevel={setHoveredHeaderListLevel}
+          />
+          }
+          {activeTab === "Фьючерсы" && 
+          <FuturesTable
+          futures={futures}
+          loadingFutures={loadingFutures}
+          errorFutures={error} 
+          />
+          }
+          {/*{activeTab === "Валюта" && <div>
             <thead>
             <tr className="table-active">
               <th className="text-center">Тикет</th>
@@ -756,7 +369,7 @@ const stackData = async() => {
               <td className="text-center">4953</td>
             </tr>
           </tbody>
-          </div>}
+          </div>}*/}
           
         </table>
       </div>
@@ -765,5 +378,5 @@ const stackData = async() => {
 </div>
 </>
     );
-}
+  }
 export default PriceCharts;
