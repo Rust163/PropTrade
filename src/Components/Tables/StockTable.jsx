@@ -13,7 +13,9 @@ function StockTable({
     hoveredHeaderListLevel,
     setHoveredHeaderListLevel,
     hoveredHeader,
-    setHoveredHeader}){
+    setHoveredHeader,
+    doubleClick 
+  }){
       if (loading) return <div>Загрузка...</div>;
       if (error) return <div>Ошибка: {error}</div>;
       if (!stock.length) return <div>Нет данных</div>;
@@ -70,11 +72,13 @@ function StockTable({
             <th>Максимум дня</th>
             <th>Минимум дня</th>
             <th>Изменение</th>
+            <th>Лучшая цена покупки</th>
+            <th>Лучшая цена продажи</th>
             <th>Размер лота</th>
-            <th>Тип ценной бумаги</th>
-            <th>Статус бумаги</th>
             <th>Объем</th>
             <th>Волатильность</th>
+            <th>Глубина покупки</th>
+            <th>Глубина продажи</th>
             </tr>
           </thead>
             <tbody style={{textAlign: "center"}}>
@@ -82,7 +86,9 @@ function StockTable({
           .filter(item => selectedTradeMode === tradeModes[0] || item.BOARDID === selectedTradeMode)
           .filter(item => selectedListLevel === listLevel[0] || item.LISTLEVEL === selectedListLevel)
           .map((item) => (
-            <tr key={`${item.SECID}-${item.BOARDID}`}>
+            <tr key={`${item.SECID}-${item.BOARDID}`}
+                onDoubleClick={() => doubleClick(item)}
+                style={{cursor: 'pointer'}}>
               <td className="text-center ml-10">{item.SECID}</td>
               <td className="text-center ml-10">{item.SHORTNAME}</td>
               <td className="text-center ml-10">{item.LISTLEVEL}</td>
@@ -104,13 +110,16 @@ function StockTable({
               <td className={item.LASTCHANGE >= 0 ? 'positive-change' : 'negative-change'}>
                 {item.LASTCHANGE >= 0 ? '+' : ''}{item.LASTCHANGE}%
               </td>
+              <td className="text-center ml-10">{item.BID}</td>
+              <td className="text-center ml-10">{item.ASK}</td>
               <td className="text-center">{item.LOTSIZE}</td>
-              <td className="text-center">{item.SECTYPE}</td>
-              <td className="text-center">{item.STATUS}</td>
+              
               <td style={{ fontFamily: 'fantasy' }}>
-                {item.VOLUME ? (item.VOLUME / 1000000).toFixed(2) + 'M' : '-'}
+                {item.VOLUME ? (item.VOLUME / 100).toFixed(2) + 'M' : '-'}
               </td>
               <td className="text-center">{item.HIGH && item.LOW ? ((item.HIGH - item.LOW) /item.PREVPRICE * 100).toFixed(2) + '%' : 'N/A'}</td>
+              <td className="text-center">{item.BIDDEPTH}</td>
+              <td className="text-center">{item.ASKDEPTH}</td>
             </tr>
               ))}
           </tbody>

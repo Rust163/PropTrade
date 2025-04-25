@@ -26,7 +26,7 @@ function NavigationMenu(){
                 <a className="nav-link point-nav" onClick={() => navigate('/PriceCharts')}>Графики/Котировки</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" >Программное обеспечение</a>
+                <a className="nav-link" onClick={() => navigate('/Software')}>Программное обеспечение</a>
               </li>
               <li className="nav-item" hidden={true}>
                 <a className="nav-link" >Скриннер</a>

@@ -10,12 +10,9 @@ function News() {
   //Получаем новостные данные
   const fatchNewsData = async () => {
     try{
-      const responseNews = await axios.get(
-        "https://iss.moex.com/iss/sitenews.json"
-      );
-      console.log("Ответ api:" ,responseNews.data);
-    } catch{
       
+    } catch{
+
     }
   }
     return(
@@ -24,7 +21,8 @@ function News() {
   <header className="blog-header py-3">
     <div className="row flex-nowrap justify-content-between align-items-center">
       <div className="col-4 pt-1">
-        <a className="link-secondary" href="#">Subscribe</a>
+        <h6>Наш новостной бот</h6>
+        <a className="link-secondary" href="#">ITES News</a>
       </div>
       <div className="col-4 text-center">
         <h1 className="blog-header-logo text-dark" href="#">Новости</h1>

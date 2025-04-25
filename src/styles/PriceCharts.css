@@ -1,3 +1,7 @@
+.loading-stocks{
+    text-align: center;
+}
+
 .table td, .table th {
     border-right: 1px solid #000000;
   }

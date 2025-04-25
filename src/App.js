@@ -12,6 +12,7 @@ import RegistrationService from "./Components/Services/RegistrationService";
 import TestTabs from "./Components/Pages/TestTabs";
 import AdminPanel from "./Components/Pages/AdminPanel";
 import PersonalAccount from "./Components/Pages/PersonalAccount";
+import Software from "./Components/Pages/Software";
 import './styles/bootstrap.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/PriceCharts" element={<PriceCharts />}/>
         <Route path="/Training" element={<Training />}/>
         <Route path="/Login" element={<Login />}/>
+        <Route path="/Software" element={<Software/>}/>
         <Route path="/Registration" element={<RegistrationService/>} />
         <Route path="/TestTabs" element={<TestTabs />}/>
         <Route path="/AdminPanel" element={<AdminPanel />}/>

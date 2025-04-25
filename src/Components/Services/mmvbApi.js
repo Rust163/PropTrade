@@ -39,6 +39,7 @@ export default{
       "SETTLEDATE," +    // Дата расчетов
       "BOARDID," +       // Режим торгов (TQBR, SMAL и тд)
       "PREVPRICE," +     // Цена предыдущего закрытия
+      "MINSTEP" +        // Минимальный шаг цены
       "STATUS," +        // Статус бумаги
       "SECTYPE," +       // Тип ценной бумаги
       "ISSUESIZE," +     // Объем выпуска
@@ -90,5 +91,53 @@ export default{
           "LOW," +         // Минимум дня
           "VOLUME," +      // Объем в деньгах
           "BUYSELLPRICE"   // Индикативная цена
-          )
+          ),
+
+    getCurrency: () => mmvbApi.get("/engines/currency/markets/selt/securities.json?" +
+        "iss.meta=off&" + // Отключаем метаданные
+        "securities.columns=" +
+          "SECID," +       // Тикер (например: USD000UTSTOM)
+          "BOARDID," +     // Режим торгов (CETS, SELT)
+          "SHORTNAME," +   // Короткое название (USD/RUB)
+          "LATNAME," +     // Международное название
+          "SECNAME," +     // Полное название
+          "DECIMALS," +    // Количество знаков после запятой
+          "MINSTEP," +     // Минимальный шаг цены
+           "LOTSIZE," +     // Размер лота
+           "FACEVALUE," +   // Номинал
+           "FACEUNIT," +    // Валюта номинала
+          "CURRENCYID," +  // Валюта инструмента
+          "SECTYPE," +     // Тип ценной бумаги
+          "LISTLEVEL," +   // Уровень листинга
+          "SETTLEDATE," +  // Дата расчетов
+          "PREVPRICE," +   // Цена предыдущего закрытия
+          "BASECURRENCY," + // Базовая валюта (USD)
+          "QUOTECURRENCY," + // Котируемая валюта (RUB)
+          "CROSSRATE" +    // Кросс-курс
+        "&marketdata.columns=" +
+          "LAST," +        // Последняя цена
+          "OPEN," +        // Цена открытия
+          "HIGH," +        // Максимум дня
+          "LOW," +         // Минимум дня
+          "VOLUME," +      // Объем в лотах
+          "VALUE," +       // Объем в деньгах
+          "WAPRICE," +     // Средневзвешенная цена
+          "LASTCHANGE," +  // Изменение цены
+          "LASTCHANGEPRCNT," + // Изменение в %
+          "LASTBID," +     // Лучшая цена покупки
+          "LASTOFFER," +   // Лучшая цена продажи
+          "NUMTRADES," +   // Количество сделок
+          "TRADINGSTATUS," + // Статус торгов
+          "UPDATETIME," +  // Время обновления
+          "BID," +         // Лучшая цена покупки (стакан)
+          "ASK," +         // Лучшая цена продажи (стакан)
+          "BIDDEPTH," +    // Глубина покупки
+          "ASKDEPTH"    // Глубина продажи"
+    ),
+
+    getOrderBook: (secId, boardId) => mmvbApi.get(
+      `/engines/stock/markets/shares/boards/${boardId}/securities/${secId}/orderbook.json?` +
+      'iss.meta=off&' +
+      'orderbook.columns=price,quantity'
+    ),
 };

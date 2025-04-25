@@ -47,7 +47,6 @@ function RunningLine() {
 
   const fetchIndexData = async () => {
     try {
-      // Используем альтернативный, более надежный API эндпоинт
       const response = await axios.get(
         "https://iss.moex.com/iss/engines/stock/markets/index/securities.json?iss.meta=off&securities.columns=SECID,SHORTNAME,PREVADMITTEDQUOTE,LASTVALUE,CHANGEPRCT"
       );
@@ -145,7 +144,7 @@ function RunningLine() {
               <span className="name-color">{item.SECID}</span>
               <br />
               <span className="price-color">{item.LAST}</span>
-              <span className="change-color">
+              <span className="change-color">+
                 {item.LASTTOPREVPRICE?.toFixed(2) ?? "N/A"}%
               </span>
             </div>
@@ -182,11 +181,11 @@ function RunningLine() {
         >
           {indices.map((item, index) => (
             <div key={index} className="item-box">
-              <span className="name-color">{item.SECID}</span>
+              <span className="name-color">{item.name}</span>
               <br />
-              <span className="price-color">{item.INDEXVAL}</span>
-              <span className={`change-color ${item.LASTVALUE >= 0 ? "positive" : "negative"}`}>
-                {item.LASTVALUE?.toFixed(2) ?? "N/A"}%
+              <span className="price-color">{item.PREVPRICE?.toFixed(2) ?? "N/A"}</span>
+              <span className={`change-color ${item.LASTCHANGEPRCNT >= 0 ? "positive" : "negative"}`}>
+              {item.changePercent?.toFixed(2) ?? "N/A"}%
               </span>
             </div>
           ))}
