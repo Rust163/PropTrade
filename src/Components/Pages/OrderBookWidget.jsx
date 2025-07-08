@@ -9,12 +9,12 @@ const OrderBookWidget = ({ stockInfo, onClose, onDoubleClick}) => {
   const [startSize, setStartSize] = useState({ width: 0, height: 0 });
   const [selectedPrice, setSelectedPrice] = useState(null);
   const containerRef = useRef(null);
+  const lastClickTime = useRef(0);
   const [position, setPosition] = useState({ 
     x: Math.random() * 200 + 20, 
     y: Math.random() * 200 + 20 
   });
   const [isDragging, setIsDragging] = useState(false);
-  const [lastClickTime, setLastClickTime] = useState(0);
 
   // Стиль для элемента изменения размера
   const resizerStyle = {
@@ -29,22 +29,22 @@ const OrderBookWidget = ({ stockInfo, onClose, onDoubleClick}) => {
   };
 
   // Обработчик двойного клика
-  const handleDoubleClick = (e) => {
-    e.stopPropagation();
-    if (onDoubleClick && stockInfo) {
+  const handleClick = (e) => {
+    const now = Date.now();
+    if (now - lastClickTime.current < 300) { // 300ms для двойного клика
+      handleDoubleClick();
+      lastClickTime.current = 0;
+    } else {
+      lastClickTime.current = now;
+    }
+  };
+
+  const handleDoubleClick = () => {
+    console.log('Widget double clicked:', stockInfo?.SECID); // Для отладки
+    if (onDoubleClick && stockInfo?.SECID) {
       onDoubleClick(stockInfo.SECID);
     }
   };
-
-  // Обработчик клика (для определения двойного клика)
-  const handleClick = (e) => {
-    const now = Date.now();
-    if (now - lastClickTime < 300) {
-      handleDoubleClick(e);
-    }
-    setLastClickTime(now);
-  };
-
   // Обработчики изменения размера
   const startResize = (e) => {
     setIsResizing(true);
@@ -124,6 +124,7 @@ const OrderBookWidget = ({ stockInfo, onClose, onDoubleClick}) => {
         top: `${position.y}px`,
         width: `${width}px`,
         height: `${height}px`,
+        transition: 'all 0.3s ease',
         fontFamily: "'Roboto', sans-serif",
         background: '#1a1a2e',
         borderRadius: '10px',
@@ -131,7 +132,7 @@ const OrderBookWidget = ({ stockInfo, onClose, onDoubleClick}) => {
         color: '#e6e6e6',
         boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
         border: '1px solid #2a2a3e',
-        zIndex: 1000,
+        zIndex: 3000,
         cursor: 'grab'
       }}
       onMouseDown={handleMouseDown}

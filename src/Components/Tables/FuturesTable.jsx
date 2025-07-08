@@ -3,7 +3,8 @@ import React from "react";
 function FuturesTable({
   futures = [],
   errorFutures,
-  loadingFutures
+  onRowDoubleClick,
+  loadingFutures,
 }) {
   if (loadingFutures) return <div>Загрузка...</div>;
   if (errorFutures) return <div>Ошибка: {errorFutures}</div>;
@@ -58,7 +59,17 @@ function FuturesTable({
             : null;
 
           return (
-            <tr key={`${item.SECID}-${item.BOARDID}`}>
+            <tr key={`${item.SECID}-${item.BOARDID}`}
+            onDoubleClick={() =>{
+              console.log('Double click on:', item); // Для отладки
+              if(item && item.SECID){
+                console.log('SECID exists:', item.SECID);
+              onRowDoubleClick(item); // Передаём только тикер
+            } else{
+              console.error('invalid item structure:', item);
+            }
+            }} /*onRowDoubleClick(item)}*/
+            style={{cursor: 'pointer'}}>
               <td className="text-center">{item.SECID}</td>
               <td className="text-center">{item.SHORTNAME}</td>
               <td className="text-center">{item.ASSETCODE}</td>

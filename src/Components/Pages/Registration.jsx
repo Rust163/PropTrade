@@ -39,8 +39,8 @@ const Registration = ({onSubmit}) => {
 <div className="container pt-5">
   <div className="py-5 text-center">
     <img className="d-block mx-auto mb-4" src="/img/brand/bootstrap-solid.svg" alt="логотип bootstrap" width="72" height="72"/>
-    <h1 className="h2">Форма оформления заказа</h1>
-    <p className="lead">Ниже приведен пример формы, полностью созданной с помощью элементов управления формой Bootstrap. Каждая требуемая группа форм имеет состояние проверки, которое может быть инициировано попыткой отправить форму без ее заполнения.</p>
+    <h1 className="h2">Форма регистрации пользователя</h1>
+    
   </div>
 
   

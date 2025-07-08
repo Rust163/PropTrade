@@ -9,7 +9,7 @@ import Training from "./Components/Pages/Training";
 import Login from "./Components/Pages/Login";
 import Registration from "./Components/Pages/Registration";
 import RegistrationService from "./Components/Services/RegistrationService";
-import TestTabs from "./Components/Pages/TestTabs";
+import TestCharts from "./Components/Pages/TestCharts";
 import AdminPanel from "./Components/Pages/AdminPanel";
 import PersonalAccount from "./Components/Pages/PersonalAccount";
 import Software from "./Components/Pages/Software";
@@ -29,7 +29,7 @@ function App() {
         <Route path="/Login" element={<Login />}/>
         <Route path="/Software" element={<Software/>}/>
         <Route path="/Registration" element={<RegistrationService/>} />
-        <Route path="/TestTabs" element={<TestTabs />}/>
+        <Route path="/TestCharts" element={<TestCharts />}/>
         <Route path="/AdminPanel" element={<AdminPanel />}/>
         <Route path="/PersonalAccount" element={<PersonalAccount />}/>
       </Routes>

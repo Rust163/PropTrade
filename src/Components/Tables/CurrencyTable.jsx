@@ -3,6 +3,7 @@ import React from "react";
 function CurrencyTable({
     currency,
     loadingCurrency,
+    onRowDoubleClick,
     errorCurrency
 }) {
     if (loadingCurrency) return <div>Загрузка...</div>;
@@ -35,7 +36,17 @@ function CurrencyTable({
           </thead>
             <tbody>
                 {currency.map((item) =>(
-            <tr key={`${item.SECID}-${item.BOARDID}`}>
+            <tr key={`${item.SECID}-${item.BOARDID}`}
+            onDoubleClick={() =>{
+              console.log('Double click on:', item); // Для отладки
+              if(item && item.SECID){
+                console.log('SECID exists:', item.SECID);
+              onRowDoubleClick(item); // Передаём только тикер
+            } else{
+              console.error('invalid item structure:', item);
+            }
+            }}
+            style={{cursor: 'pointer'}}>
               <td className="text-center">{item.SECID}</td>
               <td className="text-center">{item.SHORTNAME}</td>
               <td className="text-center">{item.SECNAME}</td>
@@ -54,7 +65,6 @@ function CurrencyTable({
               <td className="text-center">{item.LASTCHANGEPRCNT}</td>
               <td className="text-center">{item.BIDDEPTH}</td>
               <td className="text-center">{item.ASKDEPTH}</td>
-             { /*<td className="text-center">{}</td>*/}
             </tr>
                 ))}
           </tbody>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import '../../styles/PriceCharts.css';
 import StockTable from "../Tables/StockTable";
 import FuturesTable from "../Tables/FuturesTable";
@@ -7,6 +7,8 @@ import {useStockData} from "../../Hooks/useStockData";
 import {useFuturesData} from "../../Hooks/useFuturesData";
 import {useCurrencyData} from "../../Hooks/useCurrencyData";
 import OrderBookWidget from '../Pages/OrderBookWidget';
+import ChartComponent from "../Services/ChartComponent";
+import mmvbApi from "../Services/mmvbApi";
 
 
 /*https://iss.moex.com/iss/engines/futures/markets/forts/securities.json список фьючерсов */
@@ -29,12 +31,142 @@ function PriceCharts(){
   const [showOrderBook, setShowOrderBook] = useState(false);
   const [widgets, setWidgets] = useState([]);
   const [activeWidget, setActiveWidget] = useState(null);
-const [availableInstruments, setAvailableInstruments] = useState([
+  const [availableInstruments, setAvailableInstruments] = useState([
     { SECID: 'SBER', SHORTNAME: 'Сбербанк', LAST: 280.50, BID: 280.45, ASK: 280.55 },
     { SECID: 'GAZP', SHORTNAME: 'Газпром', LAST: 160.30, BID: 160.25, ASK: 160.35 },
     { SECID: 'YNDX', SHORTNAME: 'Яндекс', LAST: 4200.00, BID: 4190.00, ASK: 4210.00 }
   ]);
+  const [selectedStockForChart, setSelectedStockForChart] = useState(null);
+  const [candleData, setCandleData] = useState([]);
+  const [loadingChart, setLoadingChart] = useState(false);
+  const chartContainerRef = useRef(null);
+  const chart = useRef(null);
+  const candleSeries = useRef(null);
+  const [selectedInterval, setSelectedInterval] = useState(24);
 
+
+const fetchCandleData = async (security, interval = selectedInterval) => {
+  setLoadingChart(true);
+  try {
+    const today = new Date();
+    const fromDate = new Date();
+    
+    // Установка периода в зависимости от таймфрейма
+    if ([10, 60].includes(interval)) {
+      fromDate.setDate(today.getDate() - 1); // Для минутных данных берем 1 день
+    } else if (interval === 24) {
+      fromDate.setMonth(today.getMonth() - 1);
+    } else if (interval === 7) {
+      fromDate.setMonth(today.getMonth() - 6);
+    } else if (interval === 31) {
+      fromDate.setFullYear(today.getFullYear() - 2);
+    }
+
+    const response = await mmvbApi.getCandles(
+      security,
+      fromDate.toISOString().split('T')[0],
+      today.toISOString().split('T')[0],
+      interval
+    );
+
+    if (!response.candles?.data?.length) {
+      throw new Error(`Нет данных для ${security} за выбранный период`);
+    }
+
+    // Преобразование данных с особой обработкой времени для минутных интервалов
+    const candles = response.candles.data.map(item => {
+      const columns = response.candles.columns;
+      const candle = {};
+      columns.forEach((col, index) => {
+        candle[col] = item[index];
+      });
+
+      // Особое форматирование времени для минутных данных
+      let timestamp;
+      if ([10, 60].includes(interval)) {
+        // Для минутных интервалов используем поле 'begin' и преобразуем в формат 'YYYY-MM-DD HH:MM:SS'
+        timestamp = candle.begin ? new Date(candle.begin) : new Date();
+      } else {
+        // Для дневных и выше интервалов используем только дату
+        timestamp = candle.end ? new Date(candle.end) : new Date();
+      }
+
+      // Проверка всех обязательных полей
+      if (!candle.open || !candle.high || !candle.low || !candle.close) {
+        console.warn('Пропущена свеча из-за отсутствия данных:', candle);
+        return null;
+      }
+
+      return {
+        time: [10, 60].includes(interval) 
+          ? timestamp.getTime() / 1000 // Для минутных - timestamp в секундах
+          : timestamp.toISOString().split('T')[0], // Для дневных+ - только дата
+        open: parseFloat(candle.open),
+        high: parseFloat(candle.high),
+        low: parseFloat(candle.low),
+        close: parseFloat(candle.close),
+        volume: candle.volume ? parseFloat(candle.volume) : 0
+      };
+    }).filter(Boolean);
+
+    if (candles.length === 0) {
+      throw new Error('Нет корректных данных для отображения');
+    }
+
+    setCandleData(candles);
+    setError(null);
+
+  } catch (error) {
+    console.error('Ошибка загрузки:', error);
+    setError(error.message);
+    setCandleData([]);
+  } finally {
+    setLoadingChart(false);
+  }
+};
+
+// Обновим обработчик клика по строке таблицы
+const handleRowClick = (stock) => {
+  setSelectedStock(stock);
+  setSelectedStockForChart(stock.SECID);
+  fetchCandleData(stock.SECID, selectedInterval);
+  
+};
+
+useEffect(() => {
+  if (selectedStockForChart) {
+    fetchCandleData(selectedStockForChart, selectedInterval);
+  }
+}, [selectedInterval]);
+
+useEffect(() => {
+  if (!chart.current || !candleSeries.current) return;
+
+  // Для минутных таймфреймов меняем отображение времени
+  if ([10, 60].includes(selectedInterval)) {
+    chart.current.applyOptions({
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+        tickMarkFormatter: (time) => {
+          const date = new Date(time * 1000);
+          return date.toLocaleTimeString();
+        }
+      }
+    });
+  } else {
+    chart.current.applyOptions({
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false
+      }
+    });
+  }
+}, [selectedInterval]); 
+
+const onRowDoubleClick = (stock) => {
+  setShowOrderBook(true);
+};
   
 
   const openNewWidget = (instrumentId) => {
@@ -75,6 +207,10 @@ const [availableInstruments, setAvailableInstruments] = useState([
     console.log("Данные фьючерсов:", futures);
     console.log("Данные валюты:", currency);
 
+    
+  
+
+  
 
 if (loading) return <div className="loading loading-stocks">Загружаем рынки ценных бумаг...</div>;
 
@@ -160,10 +296,74 @@ if (loading) return <div className="loading loading-stocks">Загружаем �
             This week
           </button>
         </div>
+        
       </div>
+      <div className="timeframe-controls">
+  <div className="btn-group btn-group-sm" role="group">
+    <button 
+      type="button" 
+      className={`btn btn-outline-secondary ${selectedInterval === 10 ? 'active' : ''}`}
+      onClick={() => setSelectedInterval(10)}
+    >
+      10 мин
+    </button>
+    <button 
+      type="button" 
+      className={`btn btn-outline-secondary ${selectedInterval === 60 ? 'active' : ''}`}
+      onClick={() => setSelectedInterval(60)}
+    >
+      1 час
+    </button>
+    <button 
+      type="button" 
+      className={`btn btn-outline-secondary ${selectedInterval === 24 ? 'active' : ''}`}
+      onClick={() => setSelectedInterval(24)}
+    >
+      1 день
+    </button>
+    <button 
+      type="button" 
+      className={`btn btn-outline-secondary ${selectedInterval === 7 ? 'active' : ''}`}
+      onClick={() => setSelectedInterval(7)}
+    >
+      1 неделя
+    </button>
+    <button 
+      type="button" 
+      className={`btn btn-outline-secondary ${selectedInterval === 31 ? 'active' : ''}`}
+      onClick={() => setSelectedInterval(31)}
+    >
+      1 месяц
+    </button>
+  </div>
+</div>
 
-      <canvas className="my-4 w-100 charts-img" id="myChart" width="900" height="380"></canvas>
+      <div className="chart-section  style={{ width: '100%', height: '400px' }}">
+  
 
+  {/* Свечной график */}
+  {selectedStockForChart && (
+    <div className="candle-chart-container">
+      <h4>
+        {selectedStock.SHORTNAME} ({selectedStockForChart})
+        {loadingChart && <span className="text-muted ml-2">Загрузка...</span>}
+      </h4>
+      
+      {error ? (
+        <div className="alert alert-danger">{error}</div>
+      ) : candleData.length > 0 ? (
+        <ChartComponent 
+          candleData={candleData} 
+          key={selectedStockForChart} // Принудительное обновление при смене тикера
+        />
+      ) : (
+        <div className="alert alert-info">Нет данных для отображения</div>
+      )}
+    </div>
+  )}
+  
+      </div>
+      
       <h2>{activeTab} 
         <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}><button type="button" className="btn btn-sm btn-outline-secondary" hidden>Добавить инструмент</button>
           <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setActiveTab("Акции")}>Акции</button>
@@ -188,7 +388,8 @@ if (loading) return <div className="loading loading-stocks">Загружаем �
           <StockTable
           stock={stock}
           loading={loading}
-          doubleClick={doubleClick}
+          onRowDoubleClick={onRowDoubleClick}
+          onRowClick = {handleRowClick}
           selectedTradeMode={selectedTradeMode}
           selectedListLevel={selectedListLevel}
           tradeModes={tradeModes}

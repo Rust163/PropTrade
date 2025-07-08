@@ -85,7 +85,7 @@
   .stock-table tbody tr:hover {
     background-color: #848484 !important;
     color: white;
-    transform: translateX(4px);
+    transform: translateX(2px);
   }
   
   /* Ячейки данных */
@@ -127,3 +127,70 @@
     background: #6b73ff;
     border-radius: 4px;
   }
+
+  .price-chart-container {
+  width: 100%;
+  height: 400px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.alert-danger {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.chart-overlay-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 20px;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.chart-overlay-message.error {
+  color: #ef5350;
+}
+
+.chart-section {
+  margin: 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+}
+.candle-chart-container {
+  margin-top: 20px;
+}
+
+.timeframe-controls {
+  margin: 10px 0;
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-outline-secondary.active {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}

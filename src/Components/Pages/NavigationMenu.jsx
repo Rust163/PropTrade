@@ -17,16 +17,16 @@ function NavigationMenu(){
       <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav">
               <li className="nav-item active">
-                <a className="nav-link" aria-current="page" onClick={() => navigate('/Home')}>Домашняя</a>
+                <a className="nav-link" aria-current="page" hidden={true} onClick={() => navigate('/Home')}>Домашняя</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/News')}>Новости</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/News')}>Новости</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link point-nav" onClick={() => navigate('/PriceCharts')}>Графики/Котировки</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/Software')}>Программное обеспечение</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/Software')}>Программное обеспечение</a>
               </li>
               <li className="nav-item" hidden={true}>
                 <a className="nav-link" >Скриннер</a>
@@ -35,20 +35,20 @@ function NavigationMenu(){
                 <a className="nav-link" >Торговый журнал</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/Training')}>Обучение</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/Training')}>Обучение</a>
               </li>
               
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/Login')}>Войти</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/Login')}>Войти</a>
               </li>
-              <li className="nav-item" hidden={false}>
+              <li className="nav-item" hidden={true}>
                 <a className="nav-link" onClick={() => navigate('/PersonalAccount')}>Личный кабинет</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/Tabs')}>Tabs</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/TestCharts')}>TestPages</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={() => navigate('/AdminPanel')}>Админка</a>
+                <a className="nav-link" hidden={true} onClick={() => navigate('/AdminPanel')}>Админка</a>
               </li>
             </ul>
       </div>

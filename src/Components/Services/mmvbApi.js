@@ -23,6 +23,9 @@ mmvbApi.interceptors.response.use(
     }
 );
 
+
+
+
 export default{
     getStocks: () => mmvbApi.get("/engines/stock/markets/shares/securities.json?" +
     "iss.meta=off&" + // Отключаем метаданные для уменьшения объема данных
@@ -135,9 +138,18 @@ export default{
           "ASKDEPTH"    // Глубина продажи"
     ),
 
-    getOrderBook: (secId, boardId) => mmvbApi.get(
-      `/engines/stock/markets/shares/boards/${boardId}/securities/${secId}/orderbook.json?` +
-      'iss.meta=off&' +
-      'orderbook.columns=price,quantity'
-    ),
-};
+    getCandles: (security, from, till, interval, board = 'TQBR') => 
+  mmvbApi.get(`/engines/stock/markets/shares/boards/${board}/securities/${security}/candles.json`, {
+    params: {
+      from: from,
+      till: till,
+      interval: interval,
+      'iss.meta': 'off',
+      'candles.columns': 'open,close,high,low,volume,begin'
+    }
+  }),
+
+
+    addStocksToFavorites: () => mmvbApi.post("https://localhost:7246/api/Instruments/stock")
+
+  };
