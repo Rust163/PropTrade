@@ -1,35 +1,58 @@
-/*import React from "react";
-function DropdownTimeframeBtn(){
-    return(
-        <>
-            <div className="dropdown me-2" style={{ display: 'inline-block' }}>
-  <button 
-    className="btn btn-secondary dropdown-toggle"
-    type="button"
-    onClick={() => setIsTimeframeDropdownOpen(!isTimeframeDropdownOpen)}
-    disabled={!selectedInstrument}
-  >
-    {TIMEFRAME_OPTIONS.find(t => t.value === timeframe)?.label || 'Выберите таймфрейм'}
-  </button>
-  <div 
-    className={`dropdown-menu ${isTimeframeDropdownOpen ? 'show' : ''}`}
-    style={{ minWidth: 'auto' }}
-  >
-    {TIMEFRAME_OPTIONS.map(option => (
+import React from 'react'
+import PropTypes from 'prop-types'
+
+function DropdownTimeframeBtn({
+  selectedInstrument,
+  timeframe,
+  setTimeframe,
+  isOpen,
+  setIsOpen,
+  options,
+}) {
+  return (
+    <div className="dropdown me-2" style={{ display: 'inline-block' }}>
       <button
-        key={option.value}
-        className="dropdown-item"
-        onClick={() => {
-          setTimeframe(option.value);
-          setIsTimeframeDropdownOpen(false);
-        }}
+        className="btn btn-secondary dropdown-toggle btn-sm"
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={!selectedInstrument}
       >
-        {option.label}
+        {options.find((t) => t.value === timeframe)?.label ||
+          'Выберите таймфрейм'}
       </button>
-    ))}
-  </div>
-</div>
-        </>
-    )
+      <div
+        className={`dropdown-menu ${isOpen ? 'show' : ''}`}
+        style={{ minWidth: 'auto' }}
+      >
+        {options.map((option) => (
+          <button
+            key={option.value}
+            className="dropdown-item"
+            onClick={() => {
+              setTimeframe(option.value)
+              setIsOpen(false)
+            }}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
 }
-export default DropdownTimeframeBtn;*/
+
+DropdownTimeframeBtn.propTypes = {
+  selectedInstrument: PropTypes.string,
+  timeframe: PropTypes.number.isRequired,
+  setTimeframe: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+}
+
+export default DropdownTimeframeBtn
